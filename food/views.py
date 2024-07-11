@@ -1,16 +1,12 @@
-from django.shortcuts import render
-from django.views.generic import CreateView, FormView, DetailView
+from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse, reverse_lazy
+from django.views.generic import CreateView, FormView, DetailView, ListView
 
-from food.models import Recipe
+from food.models import Recipe, Ingredient
 from .forms import RecipeUpdateForm
 
 
 # Create your views here.
-class RecipeCreateView(CreateView):
-    model = Recipe
-    fields = '__all__'
-
-
 class RecipeUpdateView(FormView):
     form_class = RecipeUpdateForm
     template_name = 'food/recipe_form.html'
@@ -22,3 +18,33 @@ class RecipeUpdateView(FormView):
 class RecipeDetailView(DetailView):
     model = Recipe
     context_object_name = 'recipe'
+
+
+class RecipeListView(ListView):
+    model = Recipe
+
+
+class IngredientCreateView(CreateView):
+    model = Ingredient
+    fields = ['name', 'quantity']
+
+    def form_valid(self, form):
+        recipe_pk = self.kwargs['pk']
+        recipe = get_object_or_404(Recipe, pk=recipe_pk)
+        ingredient = Ingredient(recipe=recipe, name=form.cleaned_data['name'], quantity=form.cleaned_data['quantity'])
+        ingredient.save()
+        if 'add-another' in self.request.POST:
+            return redirect(reverse_lazy('Ingredient-create', kwargs={'pk': recipe_pk}))
+        return redirect('recipe-detail', pk=recipe_pk)
+
+    # success_url = reverse()
+
+
+class RecipeCreateView(CreateView):
+    model = Recipe
+    fields = '__all__'
+
+    def form_valid(self, form):
+        # response = super(RecipeCreateView, self).form_valid(form)
+        form.save()
+        return redirect(reverse_lazy('Ingredient-create', kwargs={'pk': self.object.pk}))
