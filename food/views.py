@@ -3,7 +3,7 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, FormView, DetailView, ListView
 
 from food.models import Recipe, Ingredient
-from .forms import RecipeUpdateForm
+from .forms import RecipeUpdateForm, IngredientsUpdateForm
 
 
 # Create your views here.
@@ -24,9 +24,15 @@ class RecipeListView(ListView):
     model = Recipe
 
 
-class IngredientCreateView(CreateView):
-    model = Ingredient
-    fields = ['name', 'quantity']
+class IngredientCreateView(FormView):
+    form_class = IngredientsUpdateForm
+    template_name = 'food/ingredient_form.html'
+
+    def get_context_data(self, **kwargs):
+        recipe_pk = self.kwargs['pk']
+        context = super(IngredientCreateView, self).get_context_data()
+        context['recipe'] = get_object_or_404(Recipe, pk=recipe_pk)
+        return context
 
     def form_valid(self, form):
         recipe_pk = self.kwargs['pk']
@@ -44,7 +50,10 @@ class RecipeCreateView(CreateView):
     model = Recipe
     fields = '__all__'
 
-    def form_valid(self, form):
-        # response = super(RecipeCreateView, self).form_valid(form)
-        form.save()
-        return redirect(reverse_lazy('Ingredient-create', kwargs={'pk': self.object.pk}))
+    # def form_valid(self, form):
+    #     # response = super(RecipeCreateView, self).form_valid(form)
+    #     # self.object = form.save()
+    #     return redirect(reverse_lazy('Ingredient-create', kwargs={'pk': self.object.pk}))
+
+    def get_success_url(self):
+        return reverse_lazy('Ingredient-create', kwargs={'pk': self.object.pk})

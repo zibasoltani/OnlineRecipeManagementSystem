@@ -1,4 +1,4 @@
-from .models import Recipe, Category
+from .models import Recipe, Category, Ingredient
 from django import forms
 
 
@@ -12,3 +12,8 @@ class RecipeUpdateForm(forms.ModelForm):
 
 # class RecipeDeleteForm(forms.ModelForm):
 #     class Meta:
+
+class IngredientsUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Ingredient
+        fields = ['name', 'quantity']
