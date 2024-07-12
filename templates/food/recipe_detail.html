@@ -1,5 +1,41 @@
 {% extends 'base.html' %}
+{% load custom_datetime_tags %}
+
 {% block content %}
+
     <h1> recipe detail</h1>
-  <p>title:{{ recipe.title }}</p>
+    <hr>
+    <div class="d-flex">
+        <a class="mx-3" href="{% url 'index' %}">Home</a>
+        <a class="mx-3" href="{% url 'recipe-edit' recipe.id %}">Edit</a>
+        <a class="mx-3" href="{% url 'recipe-delete' recipe.id %}">Delete</a>
+        {#        <form action="{% url 'recipe-delete' recipe.id %}" method="post">#}
+        {#            <input type="submit" value="delete">#}
+        {#        </form>#}
+    </div>
+    <hr>
+
+    <h3><b>Title: </b>{{ recipe.title }}</h3>
+    <br>
+    <p><b>Preparation Time: </b>{{ recipe.preparation_time|duration }}</p>
+    <p><b>Cooking Time: </b>{{ recipe.cooking_time|duration }}</p> <!--TODO: TIP-->
+    <p><b>Description: </b>{{ recipe.description }}</p>
+    <p><b>Instructions: </b>{{ recipe.instructions }}</p>
+    <p><b>Difficulty level: </b>{{ recipe.get_difficulty_level_display }}</p>   <!--TODO: TIP-->
+
+    <p><b>Ingredients: </b></p>
+    <ul>
+        {% for ingredient in recipe.ingredients.all %}
+            <li>{{ ingredient.name }} ( {{ ingredient.quantity }} )</li>
+        {% endfor %}
+    </ul>
+
+    <p><b>Categories: </b></p>
+    <ul>
+        {% for category in recipe.categories.all %}
+            <li>{{ category.name }}</li>
+        {% endfor %}
+    </ul>
+
+
 {% endblock %}

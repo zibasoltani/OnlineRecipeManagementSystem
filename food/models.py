@@ -17,17 +17,24 @@ class Recipe(models.Model):
     cooking_time = models.DurationField(default=timedelta(minutes=42))
     instructions = models.TextField()
     difficulty_level = models.IntegerField(choices=DifficultyLevel.choices, default=DifficultyLevel.EASY)
-
-    # def get_absolute_url(self):
-    #     return reverse('recipe-detail', kwargs={'pk': self.pk})
+    categories = models.ManyToManyField('Category', related_name="recipes")
 
     def __str__(self):
         return self.title
 
 
+# def get_absolute_url(self):
+#     return reverse('recipe-detail', kwargs={'pk': self.pk})
+
+def __str__(self):
+    return self.title
+
+
 class Category(models.Model):
     name = models.CharField(max_length=50)
-    recipes = models.ManyToManyField(Recipe, related_name="categories")
+
+    def __str__(self):
+        return self.name
 
 
 class Ingredient(models.Model):

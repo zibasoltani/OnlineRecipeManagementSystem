@@ -1,4 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
-	<a href="{% url 'recipe-create'%}"> Create Recipe </a>
+    <h1>Online Recipe Management System</h1>
+    <hr>
+    <h3>Actions</h3>
+    <ul>
+        <li><a href="{% url 'recipe-all' %}"> All Recipes</a></li>
+        <li><a href="{% url 'recipe-create' %}"> Create Recipe (+) </a></li>
+    </ul>
 {% endblock %}

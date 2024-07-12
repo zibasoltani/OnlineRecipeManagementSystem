@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h1> Deleting Recipe </h1>
+    <hr>
+
+    {% for error in form.errors %}
+        {{ error }}
+    {% endfor %}
+
+    <form action="{% url 'recipe-delete' recipe.id %}" method="post">{% csrf_token %}
+        {{ form }}
+        <p>Are you sure you want to delete "{{ recipe }}"?</p>
+        <input type="submit" value="Confirm">
+    </form>
+{% endblock %}

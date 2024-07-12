@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h1> Editing Recipe </h1>
+    <hr>
+    {{ form.errors }}
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <fieldset class="p-3 my-3 border">
+            <legend> Current ingredients:</legend>
+
+            <ul>
+                {% for ingredient in ingredients %}
+                    <li>
+                        {{ ingredient.name }} ( {{ ingredient.quantity }} )
+                        <a href="{% url 'ingredient-edit' recipe_id=ingredient.recipe_id pk=ingredient.id %}">
+                            edit
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+       
+            <input type="submit" value="Add Ingredient">
+        </fieldset>
+
+        <input type="submit" value="Save recipe">
+    </form>
+{% endblock %}
